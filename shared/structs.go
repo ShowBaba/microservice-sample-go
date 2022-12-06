@@ -7,7 +7,7 @@ type JSONResponse struct {
 	Data any `json:"data,omitempty"`
 }
 
-type ListenerServicePayload struct {
-	ServiceName string
-	Data        interface{}
+type LogPayload struct {
+	Data   string 
+	Source string 
 }

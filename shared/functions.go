@@ -53,15 +53,9 @@ func ConnectToSQLDB(host, user, password, dbname string, port int) *sql.DB {
 }
 
 func LogRequest(ctx context.Context, messageChan *amqp.Channel, source, data string) error {
-	var entry struct {
-		Source string `json:"source"`
-		Data   string `json:"data"`
-	}
-	entry.Source = source
-	entry.Data = data
-	messageData := ListenerServicePayload{
-		ServiceName: LOGGER_SERVICE,
-		Data:        entry,
+	messageData := LogPayload{
+		Source: source,
+		Data:        data,
 	}
 	b, err := json.Marshal(messageData)
 	if err != nil {
@@ -76,7 +70,7 @@ func LogRequest(ctx context.Context, messageChan *amqp.Channel, source, data str
 	if err = messageChan.PublishWithContext(
 		ctx,
 		"",
-		LISTENER_SERVICE,
+		LOGGER_SERVICE,
 		false,
 		false,
 		message,

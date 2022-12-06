@@ -61,7 +61,7 @@ func main() {
 	go func() {
 		for message := range messages {
 			log.Printf(" > Received message: %s\n", message.Body)
-			var payload app.LogPayload
+			var payload shared.LogPayload
 			if err = json.Unmarshal(message.Body, &payload); err != nil {
 				panic(err)
 			}
@@ -72,8 +72,7 @@ func main() {
 	<-forever
 }
 
-
-func handlePayload(payload app.LogPayload) {
+func handlePayload(payload shared.LogPayload) {
 	logData := data.Log{
 		Data:   payload.Data,
 		Source: payload.Source,
