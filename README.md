@@ -1,6 +1,8 @@
 ## BASIC MICROSERVICE PROJECT IN GO
 
-This project is a basic blog application backend 
+This project is a basic blog application backend, my attempt at implementing a microservice application with different communication protocols
+
+### Here's a link to the proposed architecture [link](https://lucid.app/lucidchart/f7ca1b27-1270-4bd3-97c5-4df8510cc775/edit?viewport_loc=43%2C-128%2C3096%2C1632%2C0_0&invitationId=inv_394bdf6c-3b0f-4251-ab3c-112bd78c32d2)
 
 ### FEATURES:
 1. Authentication
