@@ -23,7 +23,7 @@ This project is a basic blog application backend
 6. Notification
 
 
-## AUTH (REST)
+## AUTH (SYNC)
 1. Signup
   - connects to database (sql)
   - verify user email
@@ -36,17 +36,17 @@ This project is a basic blog application backend
   - send verification OTP to mail
   - validate otp and update password
 
-## AVATER-GENERATOR (AMPQ)
+## AVATER-GENERATOR (ASYNC)
 1. Subscribe to avater-generator service
 2. Generate a custom avater based on first letters of user first and last names.
 3. Upload generated avater to AWS S3
 4. Update user record with avater url
 
-## LOGGER (AMQP)
+## LOGGER (ASYNC)
 1. connects to database (mongo)
 2. save logs to datebase
 
-## NOTIFICATION (QMPQ)
+## NOTIFICATION (ASYNC)
 1. Push Notifications
 2. Email
 3. SMS
