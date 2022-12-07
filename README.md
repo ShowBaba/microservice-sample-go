@@ -39,16 +39,14 @@ This project is a basic blog application backend, my attempt at implementing a m
   - validate otp and update password
 
 ## AVATER-GENERATOR (ASYNC)
-1. Subscribe to avater-generator service
-2. Generate a custom avater based on first letters of user first and last names.
-3. Upload generated avater to AWS S3
-4. Update user record with avater url
+1. Generate a custom avater based on first letters of user first and last names.
+2. Upload generated avater to AWS S3
+3. Update user record with avater url
 
 ## LOGGER (ASYNC)
-1. connects to database (mongo)
-2. save logs to datebase
+1. save logs to datebase (mongo)
 
 ## NOTIFICATION (ASYNC)
-1. Push Notifications
+1. Push Notification
 2. Email
 3. SMS
