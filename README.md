@@ -7,17 +7,6 @@ This project is a basic blog application backend, my attempt at implementing a m
 
 [link](https://drive.google.com/file/d/1xaSWEzuC7NARDynK8X6u38MIRKt9ptMt/view?usp=sharing)
 
-### FEATURES:
-1. Authentication
-2. Create blog post
-3. Update blog post
-4. Delete blog post
-5. Fetch blog posts
-6. Comment on blog posts
-7. Replies on comments
-8. Delete comments
-9. Update comments
-
 
 ### SERVICES
 1. Auth
@@ -34,10 +23,10 @@ This project is a basic blog application backend, my attempt at implementing a m
   - verify user email
   - store user information
   - send user id to avater-generator service queue
-1. Login
+2. Login
   - verify user info
   - return jwt token
-1. Forgot Password
+3. Forgot Password
   - send verification OTP to mail
   - validate otp and update password
 
