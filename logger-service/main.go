@@ -48,7 +48,7 @@ func main() {
 	messages, err := channel.Consume(
 		shared.LOGGER_SERVICE,
 		"",
-		true,
+		false,
 		false,
 		false,
 		false,
@@ -65,19 +65,28 @@ func main() {
 			if err = json.Unmarshal(message.Body, &payload); err != nil {
 				panic(err)
 			}
-			handlePayload(payload)
+			if err := handlePayload(payload); err != nil {
+				if err := message.Ack(true); err != nil {
+					log.Fatal(err)
+				}
+				log.Fatal(err)
+			}
+			if err := message.Ack(false); err != nil {
+				log.Fatal(err)
+			}
 		}
 	}()
 	log.Println("waiting for message")
 	<-forever
 }
 
-func handlePayload(payload shared.LogPayload) {
+func handlePayload(payload shared.LogPayload) error {
 	logData := data.Log{
 		Data:   payload.Data,
 		Source: payload.Source,
 	}
 	if err := models.Log.Insert(logData); err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }

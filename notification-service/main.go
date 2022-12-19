@@ -19,6 +19,9 @@ var (
 func main() {
 	connection, err := amqp.Dial(shared.RABBITMQ_SERVER_URL)
 	if err != nil {
+		if err := shared.LogRequest(ctx, channel, shared.NOTIFICATION_SERVICE, fmt.Sprintf("err; %v", err)); err != nil {
+			log.Fatal(err)
+		}
 		panic(err)
 	}
 	defer connection.Close()
@@ -42,7 +45,7 @@ func main() {
 	messages, err := channel.Consume(
 		shared.NOTIFICATION_SERVICE,
 		"",
-		true,
+		false, // set auto ack to false so that messages can be manually ack when service is done processing message
 		false,
 		false,
 		false,
@@ -59,7 +62,18 @@ func main() {
 			if err = json.Unmarshal(message.Body, &payload); err != nil {
 				panic(err)
 			}
-			handleMessage(payload)
+			if err := handleMessage(payload); err != nil {
+				if err := message.Ack(true); err != nil {
+					log.Fatal(err)
+				}
+				if err := shared.LogRequest(ctx, channel, shared.NOTIFICATION_SERVICE, fmt.Sprintf("err; %v", err)); err != nil {
+					log.Fatal(err)
+				}
+				log.Fatal(err)
+			}
+			if err := message.Ack(false); err != nil {
+				log.Fatal(err)
+			}
 		}
 	}()
 	log.Println("waiting for message")
@@ -75,7 +89,7 @@ type Payload struct {
 	}
 }
 
-func handleMessage(payload Payload) {
+func handleMessage(payload Payload) error {
 	switch payload.Channel {
 	case shared.MAIL:
 		mail := app.Mail{
@@ -86,17 +100,18 @@ func handleMessage(payload Payload) {
 		}
 		if err := app.SendEmail(mail); err != nil {
 			if err := shared.LogRequest(ctx, channel, shared.NOTIFICATION_SERVICE, fmt.Sprintf("error while sending mail; err: %v", err)); err != nil {
-				log.Fatal(err)
+				return err
 			}
-			log.Fatalf("error while sending mail; err: %v", err)
+			return fmt.Errorf("error while sending mail; err: %v", err)
 		}
 		if err := shared.LogRequest(ctx, channel, shared.NOTIFICATION_SERVICE, fmt.Sprintf("sent email; payload: %v", payload)); err != nil {
-			log.Fatal(err)
+			return err
 		}
 	case shared.SMS:
 	default:
 		if err := shared.LogRequest(ctx, channel, shared.NOTIFICATION_SERVICE, fmt.Sprintf("%v", payload)); err != nil {
-			log.Fatal(err)
+			return err
 		}
 	}
+	return nil
 }

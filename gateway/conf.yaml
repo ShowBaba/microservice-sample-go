@@ -1,0 +1,19 @@
+services:
+  auth:
+    port: 3000
+    base_url: http://localhost
+    endpoints:
+      post:
+        - login
+      get:
+        - ping
+    secret_key: "${AUTH_SERVICE_SECRET_KEY}"
+  user:
+    port: 3001
+    base_url: http://localhost
+    endpoints:
+      post:
+        - register
+      get:
+        - ping
+    secret_key: "${USER_SERVICE_SECRET_KEY}"

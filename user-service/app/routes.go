@@ -25,6 +25,7 @@ func (a *App) Initialize(channel *amqp.Channel, dbModels *data.Models) {
 }
 
 func (a *App) setRouters() {
+	a.Router.Use(ValidateGatewayToken())
 	a.Post("/user/register", Register)
 	a.Get("/user/ping", Ping)
 

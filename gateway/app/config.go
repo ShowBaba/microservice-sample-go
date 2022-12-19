@@ -14,23 +14,24 @@ var (
 )
 
 type Config struct {
-	MailUsername                 string
-	MailPassword                 string
-	NotificationServiceSecretKey string
+	Port                    string
+	AuthServiceJWTSecretKey string
+	UserServiceJWTSecretKey string
 }
 
 func GetConfig() Config {
 	if _config == nil {
 		_config = ConfigFactory()
 	}
+
 	return *_config
 }
 
 func defaultConfig() *Config {
 	return &Config{
-		MailUsername:                 os.Getenv("MAIL_USERNAME"),
-		MailPassword:                 os.Getenv("MAIL_PASSWORD"),
-		NotificationServiceSecretKey: os.Getenv("NOTIFICATION_SERVICE_SECRET_KEY"),
+		Port:                    os.Getenv("PORT"),
+		AuthServiceJWTSecretKey: os.Getenv("AUTH_SERVICE_JWT_SCECRET"),
+		UserServiceJWTSecretKey: os.Getenv("USER_SERVICE_JWT_SCECRET"),
 	}
 }
 

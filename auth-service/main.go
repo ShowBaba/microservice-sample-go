@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/microservice-sample-go/auth-service/app"
+	app_ "github.com/microservice-sample-go/auth-service/app"
 	"github.com/microservice-sample-go/shared"
 	"github.com/microservice-sample-go/auth-service/data"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -22,16 +22,16 @@ func main() {
 	}
 	defer messageChan.Close()
 	dbConn := shared.ConnectToSQLDB(
-		app.GetConfig().DbHost,
-		app.GetConfig().DbUser,
-		app.GetConfig().DbPassword,
-		app.GetConfig().DbName,
-		app.GetConfig().DbPort,
+		app_.GetConfig().DbHost,
+		app_.GetConfig().DbUser,
+		app_.GetConfig().DbPassword,
+		app_.GetConfig().DbName,
+		app_.GetConfig().DbPort,
 	)
 	defer dbConn.Close()
 	models := data.New(dbConn)
-	app := app.App{}
-	port := ":3000"
+	app := app_.App{}
+	port := app_.GetConfig().Port
 	app.Initialize(messageChan, &models)
 	log.Printf("starting server on port: %s", port)
 	app.Run(port)

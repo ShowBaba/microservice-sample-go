@@ -2,7 +2,10 @@
 
 This project is a basic blog application backend, my attempt at implementing a microservice application with different communication protocols
 
-### Here's a link to the proposed architecture [link](https://drive.google.com/file/d/1xaSWEzuC7NARDynK8X6u38MIRKt9ptMt/view?usp=sharing)
+### Here's the proposed architecture 
+![microservice-architecture image](microservice-architecture.png)
+
+[link](https://drive.google.com/file/d/1xaSWEzuC7NARDynK8X6u38MIRKt9ptMt/view?usp=sharing)
 
 ### FEATURES:
 1. Authentication

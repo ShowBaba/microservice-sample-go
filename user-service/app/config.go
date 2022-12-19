@@ -15,13 +15,14 @@ var (
 )
 
 type Config struct {
-	Port         string
-	JWTSecretKey string
-	DbHost       string
-	DbPort       int
-	DbUser       string
-	DbPassword   string
-	DbName       string
+	Port                 string
+	JWTSecretKey         string
+	DbHost               string
+	DbPort               int
+	DbUser               string
+	DbPassword           string
+	DbName               string
+	UserServiceSecretKey string
 }
 
 func GetConfig() Config {
@@ -35,13 +36,14 @@ func GetConfig() Config {
 func defaultConfig() *Config {
 	dbPort, _ := strconv.Atoi(os.Getenv("DB_PORT"))
 	return &Config{
-		Port:         os.Getenv("PORT"),
-		JWTSecretKey: os.Getenv("JWT_SCECRET"),
-		DbHost:       os.Getenv("DB_HOST"),
-		DbPort:       dbPort,
-		DbUser:       os.Getenv("DB_USER"),
-		DbPassword:   os.Getenv("DB_PASSWORD"),
-		DbName:       os.Getenv("DB_NAME"),
+		Port:                 os.Getenv("PORT"),
+		JWTSecretKey:         os.Getenv("JWT_SCECRET"),
+		DbHost:               os.Getenv("DB_HOST"),
+		DbPort:               dbPort,
+		DbUser:               os.Getenv("DB_USER"),
+		DbPassword:           os.Getenv("DB_PASSWORD"),
+		DbName:               os.Getenv("DB_NAME"),
+		UserServiceSecretKey: os.Getenv("USER_SERVICE_SECRET_KEY"),
 	}
 }
 

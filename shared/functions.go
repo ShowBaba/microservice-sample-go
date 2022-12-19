@@ -6,16 +6,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 
+	"github.com/golang-jwt/jwt"
 	_ "github.com/lib/pq"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func WriteError(format string, args ...interface{}) []byte {
-	response := map[string]string{
-		"error": fmt.Sprintf(format, args...),
+func WriteError(statusCode int, message string, err interface{}) []byte {
+	response := APIResponse{
+		Status:  statusCode,
+		Message: message,
+		Data:    err,
 	}
-	if data, err := json.Marshal(response); err == nil {
+	data, err := json.Marshal(response)
+	if err == nil {
 		return data
 	} else {
 		log.Printf("Err: %s", err)
@@ -55,7 +60,7 @@ func ConnectToSQLDB(host, user, password, dbname string, port int) *sql.DB {
 func LogRequest(ctx context.Context, messageChan *amqp.Channel, source, data string) error {
 	messageData := LogPayload{
 		Source: source,
-		Data:        data,
+		Data:   data,
 	}
 	b, err := json.Marshal(messageData)
 	if err != nil {
@@ -78,4 +83,26 @@ func LogRequest(ctx context.Context, messageChan *amqp.Channel, source, data str
 		return err
 	}
 	return nil
+}
+
+func ValidateGatewayToken(signedToken, SECRET_KEY string) (*GatewayTokenJwtClaim, error) {
+	token, err := jwt.ParseWithClaims(
+		signedToken,
+		&GatewayTokenJwtClaim{},
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(SECRET_KEY), nil
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	claims, ok := token.Claims.(*GatewayTokenJwtClaim)
+	if !ok {
+		return nil, err
+	}
+	// check the expiration date of the token
+	if claims.ExpiresAt < time.Now().Local().Unix() {
+		return nil, err
+	}
+	return claims, nil
 }
