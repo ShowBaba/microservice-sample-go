@@ -13,7 +13,6 @@ This project is a basic blog application backend, my attempt at implementing a m
 2. User
 3. Gateway
 4. Avater generator
-5. Upload
 6. Logging
 7. Notification
 
