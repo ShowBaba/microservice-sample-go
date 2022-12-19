@@ -21,7 +21,7 @@ This project is a basic blog application backend, my attempt at implementing a m
 1. Login
   - verify user info
   - return jwt token
-3. Forgot Password
+2. Forgot Password
   - send verification OTP to mail
   - validate otp and update password
 
