@@ -1,4 +1,4 @@
-module github.com/microservice-sample-go/gateway
+module github.com/microservice-sample-go/gateway-service
 
 go 1.19
 

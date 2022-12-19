@@ -189,14 +189,6 @@ func ForwardRequest(r *Request, data *[]byte) (*shared.APIResponse, error) {
 	return &respData, nil
 }
 
-type APIError struct {
-	Content string
-}
-
-func (e APIError) Error() string {
-	return fmt.Sprintf(`unexpected error occured; error: %v;`, e.Content)
-}
-
 func GenerateGatewayToken(service string) (string, error) {
 	claims := &shared.GatewayTokenJwtClaim{
 		Gateway: shared.GATEWAY_SERVICE,

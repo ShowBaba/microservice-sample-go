@@ -11,7 +11,7 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	app_ "github.com/microservice-sample-go/gateway/app"
+	app_ "github.com/microservice-sample-go/gateway-service/app"
 	"github.com/microservice-sample-go/shared"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
