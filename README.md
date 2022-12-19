@@ -10,26 +10,29 @@ This project is a basic blog application backend, my attempt at implementing a m
 
 ### SERVICES
 1. Auth
-2. Gateway
-3. Avater generator
-4. Upload
-5. Logging
-6. Notification
+2. User
+3. Gateway
+4. Avater generator
+5. Upload
+6. Logging
+7. Notification
 
 
 ## AUTH (SYNC)
-1. Signup
-  - connects to database (sql)
-  - verify user email
-  - store user information
-  - send user id to avater-generator service queue
-2. Login
+1. Login
   - verify user info
   - return jwt token
 3. Forgot Password
   - send verification OTP to mail
   - validate otp and update password
 
+## USER (SYNC)
+1. Signup
+  - connects to database (sql)
+  - verify user email
+  - store user information
+  - send user id to avater-generator service queue
+  
 ## AVATER-GENERATOR (ASYNC)
 1. Generate a custom avater based on first letters of user first and last names.
 2. Upload generated avater to AWS S3
