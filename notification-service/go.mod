@@ -9,6 +9,9 @@ require (
 	github.com/rabbitmq/amqp091-go v1.5.0
 )
 
-require github.com/lib/pq v1.10.7 // indirect
+require (
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+	github.com/lib/pq v1.10.7 // indirect
+)
 
 replace github.com/microservice-sample-go/shared => ../shared

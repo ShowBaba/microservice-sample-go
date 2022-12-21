@@ -19,9 +19,6 @@ var (
 func main() {
 	connection, err := amqp.Dial(shared.RABBITMQ_SERVER_URL)
 	if err != nil {
-		if err := shared.LogRequest(ctx, channel, shared.NOTIFICATION_SERVICE, fmt.Sprintf("err; %v", err)); err != nil {
-			log.Fatal(err)
-		}
 		panic(err)
 	}
 	defer connection.Close()

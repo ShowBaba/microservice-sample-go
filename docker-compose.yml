@@ -1,0 +1,77 @@
+version: "3.2"
+networks:
+  rabbitmq_go_net:
+    driver: bridge
+services:
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    depends_on:
+      - postgres-db
+      - rabbitmq
+      - logger-service
+      - notification-service
+    environment:
+      - DATABASE_URL=postgres://username:password@database:5432/blog-db
+  user-service:
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    depends_on:
+      - postgres-db
+      - rabbitmq
+      - logger-service
+      - notification-service
+    environment:
+      - DATABASE_URL=postgres://username:password@database:5432/blog-db
+  gateway-service:
+    build:
+      context: .
+      dockerfile: gateway-service/Dockerfile
+    depends_on:
+      - rabbitmq
+      - logger-service
+      - auth-service
+      - user-service
+  logger-service:
+    build:
+      context: .
+      dockerfile: logger-service/Dockerfile
+    depends_on:
+      - rabbitmq
+      - mongo-db
+    environment:
+      - MONGO_URL=mongodb://username:password@mongodb:27017/blog-db
+  notification-service:
+    build:
+      context: .
+      dockerfile: notification-service/Dockerfile
+    depends_on:
+      - rabbitmq
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=username
+      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_DEFAULT_VHOST=vhost
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - rabbitmq_go_net
+  postgres-db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=blog-db
+  mongo-db:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=username
+      - MONGO_INITDB_ROOT_PASSWORD=password
