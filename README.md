@@ -15,6 +15,7 @@ This project is a basic blog application backend, my attempt at implementing a m
 4. Avater generator
 6. Logging
 7. Notification
+8. Data retriever (GraphQL)
 
 
 ## AUTH (SYNC)
@@ -44,3 +45,6 @@ This project is a basic blog application backend, my attempt at implementing a m
 1. Push Notification
 2. Email
 3. SMS
+
+## DATA RETRIEVER (GRAPHQL)
+1. Handles the query of all data
