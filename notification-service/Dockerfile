@@ -6,5 +6,4 @@ WORKDIR /notification-service
 COPY ./notification-service .
 RUN go mod tidy
 RUN go build -o main .
-EXPOSE 3004
 CMD ["./main"]

@@ -1,6 +1,6 @@
 version: "3.2"
 networks:
-  rabbitmq_go_net:
+  default:
     driver: bridge
 services:
   auth-service:
@@ -8,47 +8,76 @@ services:
       context: .
       dockerfile: auth-service/Dockerfile
     depends_on:
-      - postgres-db
-      - rabbitmq
-      - logger-service
-      - notification-service
-    environment:
-      - DATABASE_URL=postgres://username:password@database:5432/blog-db
+      postgres-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      logger-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+    networks:
+      - default
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - 3000:3000
   user-service:
     build:
       context: .
       dockerfile: user-service/Dockerfile
     depends_on:
-      - postgres-db
-      - rabbitmq
-      - logger-service
-      - notification-service
-    environment:
-      - DATABASE_URL=postgres://username:password@database:5432/blog-db
+      postgres-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      logger-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+    networks:
+      - default
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - 3003:3003
   gateway-service:
     build:
       context: .
       dockerfile: gateway-service/Dockerfile
     depends_on:
-      - rabbitmq
-      - logger-service
-      - auth-service
-      - user-service
+      rabbitmq:
+        condition: service_healthy
+      logger-service:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+    ports:
+      - 3002:3002
   logger-service:
     build:
       context: .
       dockerfile: logger-service/Dockerfile
     depends_on:
-      - rabbitmq
-      - mongo-db
+      rabbitmq:
+        condition: service_healthy
+      mongo-db:
+        condition: service_healthy
     environment:
-      - MONGO_URL=mongodb://username:password@mongodb:27017/blog-db
+      - MONGO_URI=mongodb://username:password@mongodb:27017/blog-db
+    healthcheck:
+      test: "exit 0"
   notification-service:
     build:
       context: .
       dockerfile: notification-service/Dockerfile
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: "exit 0"
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: 'rabbitmq'
@@ -58,20 +87,33 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=username
       - RABBITMQ_DEFAULT_PASS=password
-      - RABBITMQ_DEFAULT_VHOST=vhost
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
     networks:
-      - rabbitmq_go_net
+      - default
+    healthcheck:
+      test: "exit 0"
   postgres-db:
     image: postgres:latest
+    container_name: 'postgres-db'
+    ports:
+      - 5432
     environment:
-      - POSTGRES_USER=username
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=blog-db
+    networks:
+      - default
+    volumes:
+      - ~/.docker-conf/postgres-db/data/:/var/lib/postgresql/data/ # persist data even if container shuts down
+    healthcheck:
+      test: "exit 0"
   mongo-db:
     image: mongo:latest
+    container_name: 'mongo-db'
     environment:
       - MONGO_INITDB_ROOT_USERNAME=username
       - MONGO_INITDB_ROOT_PASSWORD=password
+    healthcheck:
+      test: "exit 0"

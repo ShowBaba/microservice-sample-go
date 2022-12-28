@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/microservice-sample-go/logger-service/app"
 	"github.com/microservice-sample-go/logger-service/data"
 	"github.com/microservice-sample-go/shared"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -15,7 +14,10 @@ var (
 )
 
 func main() {
-	client, ctx, cancel, err := data.ConnectToDB(app.GetConfig().MongoURI)
+	client, ctx, cancel, err := data.ConnectToDB("mongodb://host.docker.internal:27017")
+	if err != nil {
+		panic(err)
+	}
 	data.PingDB(ctx, client)
 	mongoInst := data.NewMongoClient(client)
 	if err != nil {

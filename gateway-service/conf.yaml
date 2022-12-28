@@ -1,7 +1,7 @@
 services:
   auth:
     port: 3000
-    base_url: http://localhost
+    base_url: http://host.docker.internal
     endpoints:
       post:
         - login
@@ -9,8 +9,8 @@ services:
         - ping
     secret_key: "${AUTH_SERVICE_SECRET_KEY}"
   user:
-    port: 3001
-    base_url: http://localhost
+    port: 3003
+    base_url: http://host.docker.internal
     endpoints:
       post:
         - register

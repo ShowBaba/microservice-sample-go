@@ -6,5 +6,4 @@ WORKDIR /logger-service
 COPY ./logger-service .
 RUN go mod tidy
 RUN go build -o main .
-EXPOSE 3003
 CMD ["./main"]
