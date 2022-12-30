@@ -9,13 +9,13 @@ This project is a basic blog application backend, my attempt at implementing a m
 
 
 ### SERVICES
-- [AUTH](#auth)
-- [USER](#user)
-- [GATEWAY](#gateway)
-- [AVATER-GENERATOR](#avater-generator)
-- [LOGGER](#logger)
-- [NOTIFICATION](#notification)
-- [DATA\_RETRIEVER](#data_retriever)
+- [Auth (REST)](#AUTH)
+- [User (REST)](#USER)
+- [Gateway (REST)](#GATEWAY)
+- [Logger (Message Queue)](#LOGGER)
+- [Avater generator (Message Queue)](#AVATER-GENERATOR)
+- [Notification (Pub-Sub)](#NOTIFICATION)
+- [Data Retriever (GraphQL)](#DATA_RETRIEVER)
 
 
 ## AUTH
