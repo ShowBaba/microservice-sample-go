@@ -23,6 +23,7 @@ type Config struct {
 	DbPassword           string
 	DbName               string
 	AuthServiceSecretKey string
+	RabbitmqServerURL    string
 }
 
 func GetConfig() Config {
@@ -44,6 +45,7 @@ func defaultConfig() *Config {
 		DbPassword:           os.Getenv("DB_PASSWORD"),
 		DbName:               os.Getenv("DB_NAME"),
 		AuthServiceSecretKey: os.Getenv("AUTH_SERVICE_SECRET_KEY"),
+		RabbitmqServerURL:    os.Getenv("RABBITMQ_SERVER_URL"),
 	}
 }
 

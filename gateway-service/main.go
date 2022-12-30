@@ -3,16 +3,15 @@ package main
 import (
 	"log"
 
-	"github.com/microservice-sample-go/gateway-service/app"
-	"github.com/microservice-sample-go/shared"
 	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/showbaba/microservice-sample-go/gateway-service/app"
 )
 
 
 
 func main() {
 	// setup rabbitmq
-	connection, err := amqp.Dial(shared.RABBITMQ_SERVER_URL)
+	connection, err := amqp.Dial(app.GetConfig().RabbitmqServerURL)
 	if err != nil {
 		panic(err)
 	}
@@ -24,7 +23,7 @@ func main() {
 	defer messageChan.Close()
 	app_ := app.App{}
 	port := app.GetConfig().Port
-	app_.Initialize()
+	app_.Initialize(messageChan)
 	log.Printf("starting server on port: %s", port)
 	app_.Run(port)
 }

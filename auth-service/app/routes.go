@@ -7,8 +7,8 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/microservice-sample-go/auth-service/data"
 	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/showbaba/microservice-sample-go/auth-service/data"
 )
 
 var (

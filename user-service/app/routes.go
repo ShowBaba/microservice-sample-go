@@ -7,8 +7,9 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/microservice-sample-go/user-service/data"
 	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/showbaba/microservice-sample-go/shared"
+	"github.com/showbaba/microservice-sample-go/user-service/data"
 )
 
 var (
@@ -22,6 +23,12 @@ func (a *App) Initialize(channel *amqp.Channel, dbModels *data.Models) {
 	a.setRouters()
 	models = dbModels
 	messageChan = channel
+
+	// declare the notifications exchange
+	err := messageChan.ExchangeDeclare(shared.NOTIFICATION_TOPIC, "topic", true, false, false, false, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (a *App) setRouters() {

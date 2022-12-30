@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/microservice-sample-go/shared"
+	"github.com/showbaba/microservice-sample-go/shared"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {

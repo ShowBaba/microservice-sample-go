@@ -9,16 +9,16 @@ This project is a basic blog application backend, my attempt at implementing a m
 
 
 ### SERVICES
-1. Auth
-2. User
-3. Gateway
-4. Avater generator
-6. Logging
-7. Notification
-8. Data retriever (GraphQL)
+[Auth (REST)](#AUTH)
+[User (REST)](#USER)
+[Gateway (REST)](#GATEWAY)
+[Avater generator (Message Queue)](#AVATER-GENERATOR)
+[Logger (Message Queue)](#LOGGER)
+[Notification (Pub-Sub)](#NOTIFICATION)
+[Data Retriever (GraphQL)](#DATA_RETRIEVER)
 
 
-## AUTH (SYNC)
+## AUTH
 1. Login
   - verify user info
   - return jwt token
@@ -26,25 +26,29 @@ This project is a basic blog application backend, my attempt at implementing a m
   - send verification OTP to mail
   - validate otp and update password
 
-## USER (SYNC)
+## USER
 1. Signup
   - connects to database (sql)
   - verify user email
   - store user information
   - send user id to avater-generator service queue
+
+## GATEWAY
+1. Validate client jwt
+2. Routes request to appropriate service
   
-## AVATER-GENERATOR (ASYNC)
+## AVATER-GENERATOR
 1. Generate a custom avater based on first letters of user first and last names.
 2. Upload generated avater to AWS S3
 3. Update user record with avater url
 
-## LOGGER (ASYNC)
+## LOGGER
 1. save logs to datebase (mongo)
 
-## NOTIFICATION (ASYNC)
+## NOTIFICATION
 1. Push Notification
 2. Email
 3. SMS
 
-## DATA RETRIEVER (GRAPHQL)
+## DATA_RETRIEVER
 1. Handles the query of all data

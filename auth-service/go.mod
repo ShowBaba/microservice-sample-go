@@ -1,4 +1,4 @@
-module github.com/microservice-sample-go/auth-service
+module github.com/showbaba/microservice-sample-go/auth-service
 
 go 1.19
 
@@ -8,7 +8,7 @@ require (
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
 	github.com/joho/godotenv v1.4.0
-	github.com/microservice-sample-go/shared v0.0.0-00010101000000-000000000000
+	github.com/showbaba/microservice-sample-go/shared v0.0.0-00010101000000-000000000000
 	github.com/rabbitmq/amqp091-go v1.5.0
 	golang.org/x/crypto v0.3.0
 )
@@ -22,4 +22,4 @@ require (
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )
 
-replace github.com/microservice-sample-go/shared => ../shared
+replace github.com/showbaba/microservice-sample-go/shared => ../shared

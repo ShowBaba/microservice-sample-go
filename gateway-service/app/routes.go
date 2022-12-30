@@ -19,9 +19,10 @@ type App struct {
 	Router *mux.Router
 }
 
-func (a *App) Initialize() {
+func (a *App) Initialize(channel *amqp.Channel) {
 	a.Router = mux.NewRouter()
 	a.setRouters()
+	messageChan = channel
 }
 
 func (a *App) setRouters() {

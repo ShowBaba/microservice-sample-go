@@ -106,3 +106,42 @@ func ValidateGatewayToken(signedToken, SECRET_KEY string) (*GatewayTokenJwtClaim
 	}
 	return claims, nil
 }
+
+// publish to notifications topic
+func SendNotification(channel *amqp.Channel, payload []byte) error {
+	q, err := channel.QueueDeclare("", false, false, true, false, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = channel.QueueBind(q.Name, q.Name, NOTIFICATION_TOPIC, false, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Set up a channel to receive acknowledgement messages
+	// ackMsgs, err := channel.Consume(q.Name, "", true, false, false, false, nil)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	err = channel.Publish(NOTIFICATION_TOPIC, "email.welcome", false, false, amqp.Publishing{
+		ContentType: "text/plain",
+		Body:        payload,
+		ReplyTo:     q.Name,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	// for {
+	// 	// Wait for an acknowledgement message
+	// 	select {
+	// 	case <-ackMsgs:
+	// 		log.Println("Received acknowledgement from notification subscriber service")
+	// 		return nil
+	// 	default:
+	// 		log.Println("waiting for ack")
+	// 		continue
+	// 	}
+	// }
+
+	log.Println("Sent notifications")
+	return nil
+}

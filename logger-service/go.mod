@@ -1,10 +1,10 @@
-module github.com/microservice-sample-go/logger-service
+module github.com/showbaba/microservice-sample-go/logger-service
 
 go 1.19
 
 require (
 	github.com/joho/godotenv v1.4.0
-	github.com/microservice-sample-go/shared v0.0.0-00010101000000-000000000000
+	github.com/showbaba/microservice-sample-go/shared v0.0.0-00010101000000-000000000000
 	github.com/rabbitmq/amqp091-go v1.5.0
 	go.mongodb.org/mongo-driver v1.11.0
 )
@@ -25,4 +25,4 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 )
 
-replace github.com/microservice-sample-go/shared => ../shared
+replace github.com/showbaba/microservice-sample-go/shared => ../shared

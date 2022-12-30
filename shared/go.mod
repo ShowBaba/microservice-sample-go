@@ -1,4 +1,4 @@
-module github.com/microservice-sample-go/shared
+module github.com/showbaba/microservice-sample-go/shared
 
 go 1.19
 

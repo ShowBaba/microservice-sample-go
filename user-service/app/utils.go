@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/microservice-sample-go/shared"
+	"github.com/showbaba/microservice-sample-go/shared"
 	"golang.org/x/crypto/bcrypt"
 )
 

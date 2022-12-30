@@ -3,15 +3,15 @@ package main
 import (
 	"log"
 
-	app_ "github.com/microservice-sample-go/auth-service/app"
-	"github.com/microservice-sample-go/shared"
-	"github.com/microservice-sample-go/auth-service/data"
 	amqp "github.com/rabbitmq/amqp091-go"
+	app_ "github.com/showbaba/microservice-sample-go/auth-service/app"
+	"github.com/showbaba/microservice-sample-go/auth-service/data"
+	"github.com/showbaba/microservice-sample-go/shared"
 )
 
 func main() {
 	// setup rabbitmq
-	connection, err := amqp.Dial(shared.RABBITMQ_SERVER_URL)
+	connection, err := amqp.Dial(app_.GetConfig().RabbitmqServerURL)
 	if err != nil {
 		panic(err)
 	}

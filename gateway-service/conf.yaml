@@ -1,7 +1,7 @@
 services:
   auth:
     port: 3000
-    base_url: http://host.docker.internal
+    base_url: http://localhost
     endpoints:
       post:
         - login
@@ -10,7 +10,7 @@ services:
     secret_key: "${AUTH_SERVICE_SECRET_KEY}"
   user:
     port: 3003
-    base_url: http://host.docker.internal
+    base_url: http://localhost
     endpoints:
       post:
         - register

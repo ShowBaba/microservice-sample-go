@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-playground/validator"
 
-	"github.com/microservice-sample-go/shared"
+	"github.com/showbaba/microservice-sample-go/shared"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {

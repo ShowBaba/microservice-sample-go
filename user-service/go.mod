@@ -1,15 +1,15 @@
-module github.com/microservice-sample-go/user-service
+module github.com/showbaba/microservice-sample-go/user-service
 
 go 1.19
 
-replace github.com/microservice-sample-go/shared => ../shared
+replace github.com/showbaba/microservice-sample-go/shared => ../shared
 
 require (
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
 	github.com/joho/godotenv v1.4.0
-	github.com/microservice-sample-go/shared v0.0.0-00010101000000-000000000000
+	github.com/showbaba/microservice-sample-go/shared v0.0.0-00010101000000-000000000000
 	golang.org/x/crypto v0.3.0
 )
 

@@ -8,8 +8,8 @@ import (
 
 	"github.com/go-playground/validator"
 
-	"github.com/microservice-sample-go/shared"
-	"github.com/microservice-sample-go/user-service/data"
+	"github.com/showbaba/microservice-sample-go/shared"
+	"github.com/showbaba/microservice-sample-go/user-service/data"
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
@@ -98,11 +98,47 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// TODO: send id to avater-generator function
-	// TODO: trigger notification service, send email notification to user email
-	if err := shared.LogRequest(ctx, messageChan, shared.USER_SERVICE, fmt.Sprintf("info: register successfully;\nemail: %v", input.Email)); err != nil {
+	// send email notification to user email
+	mail := shared.Mail{
+		Sender:  shared.MAIL_USERNAME,
+		Subject: "Welcome to our blog!",
+		To:      []string{input.Email},
+		Body: `<div style="font-family: Helvetica, Arial, sans-serif; min-width: 1000px; overflow: auto; line-height: 2;">
+            <div style="margin: 50px auto; width: 70%; padding: 20px 0;">
+                <div style="border-bottom: 1px solid #eee;"><a href="blog.com" style="font-size: 1.4em; color: #00466a; text-decoration: none; font-weight: 600;">SAM's BLOG</a></div>
+                <p style="font-size: 1.1em;">Hi,</p>
+                <p>Hi ` + input.Firstname + `</p>
+                <p>Welcome to Sam's BLOG</p>
+                <p style="font-size: 0.9em;">
+                    Regards,<br />
+                    SAM's BLOG
+                </p>
+                <hr style="border: none; border-top: 1px solid #eee;" />
+            </div>
+        </div>`,
+	}
+	payload, err := json.Marshal(mail)
+	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+		if err := shared.LogRequest(ctx, messageChan, shared.USER_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+			return
+		}
 		return
+	}
+	if err := shared.SendNotification(messageChan, payload); err != nil {
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+			if err := shared.LogRequest(ctx, messageChan, shared.USER_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+				return
+			}
+			return
+		}
 	}
 	response := shared.APIResponse{
 		Status:  http.StatusOK,

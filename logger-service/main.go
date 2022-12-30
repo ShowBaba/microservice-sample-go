@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/microservice-sample-go/logger-service/data"
-	"github.com/microservice-sample-go/shared"
 	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/showbaba/microservice-sample-go/logger-service/app"
+	"github.com/showbaba/microservice-sample-go/logger-service/data"
+	"github.com/showbaba/microservice-sample-go/shared"
 )
 
 var (
@@ -14,7 +15,7 @@ var (
 )
 
 func main() {
-	client, ctx, cancel, err := data.ConnectToDB("mongodb://host.docker.internal:27017")
+	client, ctx, cancel, err := data.ConnectToDB(app.GetConfig().MongoURI)
 	if err != nil {
 		panic(err)
 	}
@@ -25,7 +26,7 @@ func main() {
 	}
 	defer data.CloseDBConnection(client, ctx, cancel)
 	models = &mongoInst
-	connection, err := amqp.Dial(shared.RABBITMQ_SERVER_URL)
+	connection, err := amqp.Dial(app.GetConfig().RabbitmqServerURL)
 	if err != nil {
 		panic(err)
 	}

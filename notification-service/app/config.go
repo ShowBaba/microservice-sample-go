@@ -17,6 +17,7 @@ type Config struct {
 	MailUsername                 string
 	MailPassword                 string
 	NotificationServiceSecretKey string
+	RabbitmqServerURL       string
 }
 
 func GetConfig() Config {
@@ -31,6 +32,7 @@ func defaultConfig() *Config {
 		MailUsername:                 os.Getenv("MAIL_USERNAME"),
 		MailPassword:                 os.Getenv("MAIL_PASSWORD"),
 		NotificationServiceSecretKey: os.Getenv("NOTIFICATION_SERVICE_SECRET_KEY"),
+		RabbitmqServerURL:       os.Getenv("RABBITMQ_SERVER_URL"),
 	}
 }
 

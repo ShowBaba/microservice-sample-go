@@ -22,6 +22,13 @@ services:
       test: "exit 0"
     ports:
       - 3000:3000
+    environment:
+      - RABBITMQ_SERVER_URL=amqp://username:password@rabbitmq:5672/
+      - DB_HOST=host.docker.internal
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=blog-db
   user-service:
     build:
       context: .
@@ -41,6 +48,13 @@ services:
       test: "exit 0"
     ports:
       - 3003:3003
+    environment:
+      - RABBITMQ_SERVER_URL=amqp://username:password@rabbitmq:5672/
+      - DB_HOST=host.docker.internal
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=blog-db
   gateway-service:
     build:
       context: .
@@ -56,6 +70,8 @@ services:
         condition: service_healthy
     ports:
       - 3002:3002
+    environment:
+      - RABBITMQ_SERVER_URL=amqp://username:password@rabbitmq:5672/
   logger-service:
     build:
       context: .
@@ -66,7 +82,8 @@ services:
       mongo-db:
         condition: service_healthy
     environment:
-      - MONGO_URI=mongodb://username:password@mongodb:27017/blog-db
+      - MONGO_URI=mongodb://username:password@mongo-db:27017/blog-db
+      - RABBITMQ_SERVER_URL=amqp://username:password@rabbitmq:5672/
     healthcheck:
       test: "exit 0"
   notification-service:
@@ -78,6 +95,8 @@ services:
         condition: service_healthy
     healthcheck:
       test: "exit 0"
+    environment:
+      - RABBITMQ_SERVER_URL=amqp://username:password@rabbitmq:5672/
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: 'rabbitmq'
