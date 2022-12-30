@@ -54,4 +54,4 @@ This project is a basic blog application backend, my attempt at implementing a m
 1. Handles the query of all data
 
 # NOTE
-To run docker-compose, update the base urls of the services in the [conf.yml](https://github.com/ShowBaba/microservice-sample-go/blob/main/gateway-service/conf.yaml) file by changing the localhost to the service name, e.g http://localhost -> http://auth-service
+To run docker-compose, update the base urls of the services in the [conf.yml](https://github.com/ShowBaba/microservice-sample-go/blob/main/gateway-service/conf.yaml) file e.g http://localhost -> http://auth-service
