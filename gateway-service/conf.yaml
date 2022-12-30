@@ -7,7 +7,6 @@ services:
         - login
       get:
         - ping
-    secret_key: "${AUTH_SERVICE_SECRET_KEY}"
   user:
     port: 3003
     base_url: http://localhost
@@ -16,4 +15,3 @@ services:
         - register
       get:
         - ping
-    secret_key: "${USER_SERVICE_SECRET_KEY}"

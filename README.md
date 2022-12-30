@@ -9,13 +9,13 @@ This project is a basic blog application backend, my attempt at implementing a m
 
 
 ### SERVICES
-- [Auth (REST)](#AUTH)
-- [User (REST)](#USER)
-- [Gateway (REST)](#GATEWAY)
-- [Logger (Message Queue)](#LOGGER)
-- [Avater generator (Message Queue)](#AVATER-GENERATOR)
-- [Notification (Pub-Sub)](#NOTIFICATION)
-- [Data Retriever (GraphQL)](#DATA_RETRIEVER)
+- [AUTH](#auth)
+- [USER](#user)
+- [GATEWAY](#gateway)
+- [AVATER-GENERATOR](#avater-generator)
+- [LOGGER](#logger)
+- [NOTIFICATION](#notification)
+- [DATA\_RETRIEVER](#data_retriever)
 
 
 ## AUTH
@@ -52,3 +52,6 @@ This project is a basic blog application backend, my attempt at implementing a m
 
 ## DATA_RETRIEVER
 1. Handles the query of all data
+
+# NOTE
+To run docker-compose, update the base urls of the services in the [conf.yml](https://github.com/ShowBaba/microservice-sample-go/blob/main/gateway-service/conf.yaml) file by changing the localhost to the service name, e.g http://localhost -> http://auth-service

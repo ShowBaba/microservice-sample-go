@@ -82,7 +82,7 @@ services:
       mongo-db:
         condition: service_healthy
     environment:
-      - MONGO_URI=mongodb://username:password@mongo-db:27017/blog-db
+      - MONGO_URI=mongodb://username:password@mongo-db:27017/blog-db?ssl=false&authSource=admin
       - RABBITMQ_SERVER_URL=amqp://username:password@rabbitmq:5672/
     healthcheck:
       test: "exit 0"
@@ -92,6 +92,8 @@ services:
       dockerfile: notification-service/Dockerfile
     depends_on:
       rabbitmq:
+        condition: service_healthy
+      logger-service:
         condition: service_healthy
     healthcheck:
       test: "exit 0"
