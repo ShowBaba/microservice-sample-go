@@ -16,20 +16,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var input LoginPayload
 	if body, err := io.ReadAll(r.Body); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(shared.WriteError(http.StatusBadRequest, "Invalid body: %s", err))
+		shared.Dispatch400Error(w, "invalid body: %s", err)
 		if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+			shared.Dispatch500Error(w, err)
 			return
 		}
 		return
 	} else if err := json.Unmarshal(body, &input); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(shared.WriteError(http.StatusBadRequest, "invalid body: %s", err))
+		shared.Dispatch400Error(w, "invalid body: %s", err)
 		if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+			shared.Dispatch500Error(w, err)
 			return
 		}
 		return
@@ -41,19 +37,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(shared.WriteError(http.StatusBadRequest, validationErrors.Error(), nil))
 		if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("err: %v", validationErrors.Error())); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+			shared.Dispatch500Error(w, err)
 			return
 		}
 		return
 	}
 	userData, err := models.User.GetByEmail(input.Email)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+		shared.Dispatch500Error(w, err)
 		if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+			shared.Dispatch500Error(w, err)
 
 			return
 		}
@@ -63,19 +56,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(shared.WriteError(http.StatusNotFound, "email is not registered", nil))
 		if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("err: email is not registered;\nemail: %s", input.Email)); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+			shared.Dispatch500Error(w, err)
 			return
 		}
 		return
 	}
 	passwordMatch, err := PasswordMatches(input.Password, userData.Password)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+		shared.Dispatch500Error(w, err)
 		if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+			shared.Dispatch500Error(w, err)
 			return
 		}
 		return
@@ -84,19 +74,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(shared.WriteError(http.StatusBadRequest, "incorrect password", nil))
 		if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("err: incorrect password;\nemail: %s", input.Email)); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+			shared.Dispatch500Error(w, err)
 			return
 		}
 		return
 	}
 	jwtToken, err := GenerateToken(GetConfig().JWTSecretKey, input.Email)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+		shared.Dispatch500Error(w, err)
 		if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+			shared.Dispatch500Error(w, err)
 			return
 		}
 		return
@@ -105,9 +92,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		Token string `json:"token"`
 	}
 	if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("info: login successfully;\nemail: %v", input.Email)); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
-
+		shared.Dispatch500Error(w, err)
 		return
 	}
 	token := Token{Token: jwtToken}
@@ -118,11 +103,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 	responseJSON, err := json.Marshal(response)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+		shared.Dispatch500Error(w, err)
 		if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+			shared.Dispatch500Error(w, err)
 			return
 		}
 		return
@@ -139,11 +122,9 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 	}
 	responseJSON, err := json.Marshal(response)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+		shared.Dispatch500Error(w, err)
 		if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+			shared.Dispatch500Error(w, err)
 			return
 		}
 		return

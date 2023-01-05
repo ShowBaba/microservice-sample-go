@@ -3,6 +3,7 @@ package shared
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/golang-jwt/jwt"
 )
@@ -20,6 +21,11 @@ type LogPayload struct {
 }
 type GatewayTokenJwtClaim struct {
 	Gateway string
+	jwt.StandardClaims
+}
+
+type AuthTokenJwtClaim struct {
+	Email string
 	jwt.StandardClaims
 }
 
@@ -43,4 +49,14 @@ func (mail *Mail) BuildMessage() string {
 	msg += fmt.Sprintf("Subject: %s\r\n", mail.Subject)
 	msg += fmt.Sprintf("\r\n%s\r\n", mail.Body)
 	return msg
+}
+
+type User struct {
+	ID        int       `json:"id"`
+	Email     string    `json:"email"`
+	Firstname string    `json:"firstname,omitempty"`
+	Lastname  string    `json:"lastname,omitempty"`
+	Password  string    `json:"-"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

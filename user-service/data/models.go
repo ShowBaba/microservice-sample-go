@@ -6,17 +6,11 @@ import (
 	"log"
 	"sync"
 	"time"
+
+	"github.com/showbaba/microservice-sample-go/shared"
 )
 
-type User struct {
-	ID        int       `json:"id"`
-	Email     string    `json:"email"`
-	Firstname string    `json:"firstname,omitempty"`
-	Lastname  string    `json:"lastname,omitempty"`
-	Password  string    `json:"-"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
+type User shared.User
 
 func (u *User) Insert(user *User) (int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
@@ -82,7 +76,7 @@ func Migrate() {
 		// Users
 		ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 		defer cancel()
-		tableExist, err := checkTableExist(ctx, "users")
+		tableExist, err := shared.CheckTableExist(ctx, db, "users")
 		if err != nil {
 			errorCh <- err
 		}
@@ -111,18 +105,4 @@ func Migrate() {
 	}
 
 	log.Println("complete db migration")
-}
-
-func checkTableExist(ctx context.Context, tableName string) (bool, error) {
-	query := `
-		SELECT EXISTS (
-   SELECT FROM pg_tables
-   WHERE  schemaname = 'public'
-   AND    tablename  = $1
-   );
-	`
-	row := db.QueryRowContext(ctx, query, tableName)
-	var response bool
-	_ = row.Scan(&response)
-	return response, nil
 }

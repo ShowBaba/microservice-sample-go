@@ -15,3 +15,11 @@ services:
         - register
       get:
         - ping
+  blog:
+    port: 3004
+    base_url: http://localhost
+    endpoints:
+      post:
+        - create
+      get:
+        - ping

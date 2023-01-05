@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -107,6 +108,29 @@ func ValidateGatewayToken(signedToken, SECRET_KEY string) (*GatewayTokenJwtClaim
 	return claims, nil
 }
 
+// validate auth token in header
+func ValidateAuthToken(signedToken, SECRET_KEY string) (*AuthTokenJwtClaim, error) {
+	token, err := jwt.ParseWithClaims(
+		signedToken,
+		&AuthTokenJwtClaim{},
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(SECRET_KEY), nil
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	claims, ok := token.Claims.(*AuthTokenJwtClaim)
+	if !ok {
+		return nil, err
+	}
+	// check the expiration date of the token
+	if claims.ExpiresAt < time.Now().Local().Unix() {
+		return nil, err
+	}
+	return claims, nil
+}
+
 // publish to notifications topic
 func SendNotification(channel *amqp.Channel, payload []byte) error {
 	q, err := channel.QueueDeclare("", false, false, true, false, nil)
@@ -144,4 +168,49 @@ func SendNotification(channel *amqp.Channel, payload []byte) error {
 
 	log.Println("Sent notifications")
 	return nil
+}
+
+// check if a table exist in the pg db
+func CheckTableExist(ctx context.Context, db *sql.DB, tableName string) (bool, error) {
+	query := `
+		SELECT EXISTS (
+   SELECT FROM pg_tables
+   WHERE  schemaname = 'public'
+   AND    tablename  = $1
+   );
+	`
+	row := db.QueryRowContext(ctx, query, tableName)
+	var response bool
+	_ = row.Scan(&response)
+	return response, nil
+}
+
+// 500 - internal server error
+func Dispatch500Error(w http.ResponseWriter, err error) {
+	w.WriteHeader(http.StatusInternalServerError)
+	w.Write(WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+}
+
+// 501 - not implemented
+func Dispatch501Error(w http.ResponseWriter, msg string, err error) {
+	w.WriteHeader(http.StatusNotImplemented)
+	w.Write(WriteError(http.StatusNotImplemented, msg, err))
+}
+
+// 405 - method not allowed
+func Dispatch405Error(w http.ResponseWriter, msg string, err error) {
+	w.WriteHeader(http.StatusMethodNotAllowed)
+	w.Write(WriteError(http.StatusMethodNotAllowed, msg, err))
+}
+
+// 400 - bad request
+func Dispatch400Error(w http.ResponseWriter, msg string, err any) {
+	w.WriteHeader(http.StatusBadRequest)
+	w.Write(WriteError(http.StatusBadRequest, msg, err))
+}
+
+// 404 - not found
+func Dispatch404Error(w http.ResponseWriter, msg string, err any) {
+	w.WriteHeader(http.StatusNotFound)
+	w.Write(WriteError(http.StatusNotFound, msg, err))
 }

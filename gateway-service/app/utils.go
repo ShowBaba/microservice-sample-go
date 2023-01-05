@@ -121,6 +121,8 @@ func GenerateGatewayToken(service string) (string, error) {
 		secretKey = GetConfig().AuthServiceJWTSecretKey
 	case shared.USER_SERVICE:
 		secretKey = GetConfig().UserServiceJWTSecretKey
+	case shared.BLOG_SERVICE:
+		secretKey = GetConfig().BlogServiceSecretKey
 	default:
 		secretKey = ""
 	}
@@ -149,5 +151,13 @@ type ServiceConfig struct {
 				Get  []string `yaml:"get"`
 			} `yaml:"endpoints"`
 		} `yaml:"user"`
+		Blog struct {
+			Port      int    `yaml:"port"`
+			BaseURL   string `yaml:"base_url"`
+			Endpoints struct {
+				Post []string `yaml:"post"`
+				Get  []string `yaml:"get"`
+			} `yaml:"endpoints"`
+		} `yaml:"blog"`
 	} `yaml:"services"`
 }

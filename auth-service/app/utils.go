@@ -26,7 +26,7 @@ func PasswordMatches(password, hash string) (bool, error) {
 
 // GenerateToken generates a jwt token
 func GenerateToken(JWTSecretKey, email string) (signedToken string, err error) {
-	claims := &JwtClaim{
+	claims := &shared.AuthTokenJwtClaim{
 		Email: email,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(24)).Unix(),
@@ -45,29 +45,24 @@ func ValidateGatewayToken() func(http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			token := r.Header.Get("gateway_signature")
 			if token == "" {
-				w.WriteHeader(http.StatusBadRequest)
-				w.Write(shared.WriteError(http.StatusBadRequest, "gateway-token not in header", nil))
+				shared.Dispatch400Error(w, "gateway-token not in header", nil)
 				if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, "gateway-token not in header"); err != nil {
-					w.WriteHeader(http.StatusInternalServerError)
-					w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+					shared.Dispatch500Error(w, err)
 					return
 				}
 				return
 			}
 			claim, err := shared.ValidateGatewayToken(token, GetConfig().AuthServiceSecretKey)
 			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				w.Write(shared.WriteError(http.StatusBadRequest, "error validating gateway-token", fmt.Sprintf("%v", err)))
+				shared.Dispatch400Error(w, "error validating gateway-token", fmt.Sprintf("%v", err))
 				if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
-					w.WriteHeader(http.StatusInternalServerError)
-					w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+					shared.Dispatch500Error(w, err)
 					return
 				}
 				return
 			}
 			if err := shared.LogRequest(ctx, messageChan, shared.AUTH_SERVICE, fmt.Sprintf("authenticate gateway: %s", claim.Gateway)); err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write(shared.WriteError(http.StatusInternalServerError, "", fmt.Sprintf("%v", err)))
+				shared.Dispatch500Error(w, err)
 				return
 			}
 			next.ServeHTTP(w, r)
