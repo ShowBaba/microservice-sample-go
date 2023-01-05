@@ -55,6 +55,32 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=password
       - DB_NAME=blog-db
+  blog-service:
+    build:
+      context: .
+      dockerfile: blog-service/Dockerfile
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      logger-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+    networks:
+      - default
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - 3004:3004
+    environment:
+      - RABBITMQ_SERVER_URL=amqp://username:password@rabbitmq:5672/
+      - DB_HOST=host.docker.internal
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=blog-db
   gateway-service:
     build:
       context: .
@@ -67,6 +93,8 @@ services:
       auth-service:
         condition: service_healthy
       user-service:
+        condition: service_healthy
+      blog-service:
         condition: service_healthy
     ports:
       - 3002:3002
