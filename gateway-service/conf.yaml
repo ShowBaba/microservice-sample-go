@@ -1,7 +1,7 @@
 services:
   auth:
     port: 3000
-    base_url: http://localhost
+    base_url: http://auth-service
     endpoints:
       post:
         - login
@@ -9,7 +9,7 @@ services:
         - ping
   user:
     port: 3003
-    base_url: http://localhost
+    base_url: http:/user-/service
     endpoints:
       post:
         - register
@@ -17,7 +17,7 @@ services:
         - ping
   blog:
     port: 3004
-    base_url: http://localhost
+    base_url: http://blog-service
     endpoints:
       post:
         - create
