@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	amqp "github.com/rabbitmq/amqp091-go"
-	"github.com/showbaba/microservice-sample-go/blog-service/data"
+	"github.com/showbaba/microservice-sample-go/post-service/data"
 	"github.com/showbaba/microservice-sample-go/shared"
 )
 
@@ -33,8 +33,8 @@ func (a *App) Initialize(channel *amqp.Channel, dbModels *data.Models) {
 
 func (a *App) setRouters() {
 	a.Router.Use(ValidateGatewayToken())
-	a.Get("/blog/ping", Ping)
-	a.Post("/blog/create", ValidateAuthToken(), CreatePost)
+	a.Get("/post/ping", Ping)
+	a.Post("/post/create", ValidateAuthToken(), CreatePost)
 
 }
 

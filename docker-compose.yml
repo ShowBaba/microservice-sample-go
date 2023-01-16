@@ -55,10 +55,10 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=password
       - DB_NAME=blog-db
-  blog-service:
+  post-service:
     build:
       context: .
-      dockerfile: blog-service/Dockerfile
+      dockerfile: post-service/Dockerfile
     depends_on:
       postgres-db:
         condition: service_healthy
@@ -94,7 +94,7 @@ services:
         condition: service_healthy
       user-service:
         condition: service_healthy
-      blog-service:
+      post-service:
         condition: service_healthy
     ports:
       - 3002:3002

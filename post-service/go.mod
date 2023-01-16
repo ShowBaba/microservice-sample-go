@@ -1,4 +1,4 @@
-module github.com/showbaba/microservice-sample-go/blog-service
+module github.com/showbaba/microservice-sample-go/post-service
 
 go 1.19
 

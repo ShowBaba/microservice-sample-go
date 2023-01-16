@@ -12,15 +12,15 @@ import (
 
 type User shared.User
 
-func (u *User) Insert(user *User) (int, error) {
+func (u *User) Insert() (int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 	var id int
 	query := `INSERT INTO Users (email, firstname, lastname, password, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`
 	if err := db.QueryRowContext(ctx, query,
-		&user.Email, &user.Firstname,
-		&user.Lastname, &user.Password,
+		&u.Email, &u.Firstname,
+		&u.Lastname, &u.Password,
 		time.Now(), time.Now()).Scan(&id); err != nil {
 		return 0, err
 	}
@@ -82,9 +82,9 @@ func Migrate() {
 		}
 		if !tableExist {
 			query := `CREATE TABLE USERS(
-					ID SERIAL PRIMARY KEY, EMAIL CHAR(500) UNIQUE NOT NULL,
-					FIRSTNAME CHAR(500) NOT NULL, LASTNAME CHAR(500) NOT NULL,
-					PASSWORD CHAR(500) NOT NULL, CREATED_AT DATE, UPDATED_AT DATE
+					ID SERIAL PRIMARY KEY, EMAIL VARCHAR(255) UNIQUE NOT NULL,
+					FIRSTNAME VARCHAR(255) NOT NULL, LASTNAME VARCHAR(255) NOT NULL,
+					PASSWORD VARCHAR(255) NOT NULL, CREATED_AT DATE, UPDATED_AT DATE
 				)`
 			_, err := db.ExecContext(ctx, query)
 			if err != nil {

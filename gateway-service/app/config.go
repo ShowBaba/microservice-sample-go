@@ -17,7 +17,7 @@ type Config struct {
 	Port                    string
 	AuthServiceJWTSecretKey string
 	UserServiceJWTSecretKey string
-	BlogServiceSecretKey    string
+	PostServiceSecretKey    string
 	RabbitmqServerURL       string
 }
 
@@ -34,7 +34,7 @@ func defaultConfig() *Config {
 		Port:                    os.Getenv("PORT"),
 		AuthServiceJWTSecretKey: os.Getenv("AUTH_SERVICE_JWT_SCECRET"),
 		UserServiceJWTSecretKey: os.Getenv("USER_SERVICE_JWT_SCECRET"),
-		BlogServiceSecretKey:    os.Getenv("BLOG_SERVICE_JWT_SCECRET"),
+		PostServiceSecretKey:    os.Getenv("BLOG_SERVICE_JWT_SCECRET"),
 		RabbitmqServerURL:       os.Getenv("RABBITMQ_SERVER_URL"),
 	}
 }

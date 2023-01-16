@@ -15,7 +15,7 @@ func ValidateGatewayToken() func(http.Handler) http.Handler {
 			token := r.Header.Get("gateway_signature")
 			if token == "" {
 				shared.Dispatch400Error(w, "gateway-token not in header", nil)
-				if err := shared.LogRequest(ctx, messageChan, shared.BLOG_SERVICE, "gateway-token not in header"); err != nil {
+				if err := shared.LogRequest(ctx, messageChan, shared.POST_SERVICE, "gateway-token not in header"); err != nil {
 					shared.Dispatch500Error(w, err)
 					return
 				}
@@ -24,13 +24,13 @@ func ValidateGatewayToken() func(http.Handler) http.Handler {
 			claim, err := shared.ValidateGatewayToken(token, GetConfig().BlogServiceSecretKey)
 			if err != nil {
 				shared.Dispatch400Error(w, "error validating gateway-token", fmt.Sprintf("%v", err))
-				if err := shared.LogRequest(ctx, messageChan, shared.BLOG_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
+				if err := shared.LogRequest(ctx, messageChan, shared.POST_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
 					shared.Dispatch500Error(w, err)
 					return
 				}
 				return
 			}
-			if err := shared.LogRequest(ctx, messageChan, shared.BLOG_SERVICE, fmt.Sprintf("authenticate gateway: %s", claim.Gateway)); err != nil {
+			if err := shared.LogRequest(ctx, messageChan, shared.POST_SERVICE, fmt.Sprintf("authenticate gateway: %s", claim.Gateway)); err != nil {
 				shared.Dispatch500Error(w, err)
 				return
 			}
@@ -45,7 +45,7 @@ func ValidateAuthToken() func(http.Handler) http.Handler {
 			authHeader := r.Header.Get("Authorization")
 			if authHeader == "" {
 				shared.Dispatch400Error(w, "auth token not in header", nil)
-				if err := shared.LogRequest(ctx, messageChan, shared.BLOG_SERVICE, "auth token not in header"); err != nil {
+				if err := shared.LogRequest(ctx, messageChan, shared.POST_SERVICE, "auth token not in header"); err != nil {
 					shared.Dispatch500Error(w, err)
 					return
 				}
@@ -54,7 +54,7 @@ func ValidateAuthToken() func(http.Handler) http.Handler {
 			parts := strings.SplitN(authHeader, " ", 3)
 			if len(parts) != 3 || parts[0] != "Bearer" {
 				shared.Dispatch400Error(w, "bearer token not in header", nil)
-				if err := shared.LogRequest(ctx, messageChan, shared.BLOG_SERVICE, "bearer token not in header"); err != nil {
+				if err := shared.LogRequest(ctx, messageChan, shared.POST_SERVICE, "bearer token not in header"); err != nil {
 					shared.Dispatch500Error(w, err)
 					return
 				}
@@ -63,13 +63,13 @@ func ValidateAuthToken() func(http.Handler) http.Handler {
 			claim, err := shared.ValidateAuthToken(parts[2], GetConfig().JWTSecretKey)
 			if err != nil {
 				shared.Dispatch400Error(w, "error validating auth token token", fmt.Sprintf("%v", err))
-				if err := shared.LogRequest(ctx, messageChan, shared.BLOG_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
+				if err := shared.LogRequest(ctx, messageChan, shared.POST_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
 					shared.Dispatch500Error(w, err)
 					return
 				}
 				return
 			}
-			if err := shared.LogRequest(ctx, messageChan, shared.BLOG_SERVICE, fmt.Sprintf("authenticate user: %s", claim.Email)); err != nil {
+			if err := shared.LogRequest(ctx, messageChan, shared.POST_SERVICE, fmt.Sprintf("authenticate user: %s", claim.Email)); err != nil {
 				shared.Dispatch500Error(w, err)
 				return
 			}

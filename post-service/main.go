@@ -5,8 +5,8 @@ import (
 
 	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/showbaba/microservice-sample-go/shared"
-	"github.com/showbaba/microservice-sample-go/blog-service/data"
-	app_ "github.com/showbaba/microservice-sample-go/blog-service/app"
+	"github.com/showbaba/microservice-sample-go/post-service/data"
+	app_ "github.com/showbaba/microservice-sample-go/post-service/app"
 )
 
 func main() {

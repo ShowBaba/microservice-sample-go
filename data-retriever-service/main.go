@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/graphql-go/graphql"
 	app_ "github.com/showbaba/microservice-sample-go/data-retriever-service/app"
-	"github.com/showbaba/microservice-sample-go/shared"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 var (
@@ -18,16 +20,24 @@ var (
 )
 
 func main() {
-	dbConn := shared.ConnectToSQLDB(
-		app_.GetConfig().DbHost,
-		app_.GetConfig().DbUser,
-		app_.GetConfig().DbPassword,
-		app_.GetConfig().DbName,
-		app_.GetConfig().DbPort,
+	var (
+		err     error
+		port, _ = strconv.ParseUint(strconv.Itoa(app_.GetConfig().DbPort), 10, 32)
+		dsn     = fmt.Sprintf(
+			"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+			app_.GetConfig().DbHost, port, app_.GetConfig().DbUser, app_.GetConfig().DbPassword, app_.GetConfig().DbName,
+		)
 	)
-	defer dbConn.Close()
+	dbConn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
+	if err != nil {
+		fmt.Println(
+			err.Error(),
+		)
+		panic("failed to connect database")
+	}
 	app := app_.NewApp(dbConn)
-	var err error
 	schema, err = graphql.NewSchema(
 		graphql.SchemaConfig{
 			Query: app.Init(),
@@ -39,9 +49,9 @@ func main() {
 	}
 
 	http.HandleFunc("/", Run)
-
-	fmt.Println("Server is running on port 8080")
-	http.ListenAndServe(":8080", nil)
+	serverPort := app_.GetConfig().Port
+	fmt.Println("GRAPHQL server is running on port ", serverPort)
+	http.ListenAndServe(serverPort, nil)
 }
 
 func Run(w http.ResponseWriter, r *http.Request) {
@@ -77,19 +87,16 @@ func Run(w http.ResponseWriter, r *http.Request) {
 			Context:        ctx,
 		})
 	} else {
-		// Perform GraphQL request
 		resp = graphql.Do(graphql.Params{
 			Schema:        schema,
 			RequestString: string(body),
 			Context:       ctx,
 		})
 	}
-	// Check for errors
 	if len(resp.Errors) > 0 {
 		responseError(w, fmt.Sprintf("%+v", resp.Errors), http.StatusBadRequest)
 		return
 	}
-	// Return the result
 	responseJSON(w, resp)
 }
 

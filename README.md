@@ -2,7 +2,7 @@
 
 This project is a basic blog application backend, my attempt at implementing a microservice application with different communication protocols
 
-### Here's the proposed architecture 
+### Here's my proposed architecture 
 ![microservice-architecture image](microservice-architecture.png)
 
 [link](https://drive.google.com/file/d/1xaSWEzuC7NARDynK8X6u38MIRKt9ptMt/view?usp=sharing)
@@ -16,7 +16,7 @@ This project is a basic blog application backend, my attempt at implementing a m
 - [Avater generator (Message Queue)](#AVATER-GENERATOR)
 - [Notification (Pub-Sub)](#NOTIFICATION)
 - [Data Retriever (GraphQL)](#DATA_RETRIEVER)
-- [Blog (REST)](#REST)
+- [Post (REST)](#POST)
 
 
 ## AUTH
@@ -54,7 +54,7 @@ This project is a basic blog application backend, my attempt at implementing a m
 ## DATA_RETRIEVER
 1. Handles the query of all data with GraphQL
 
-## BLOG
+## POST
 1. CRUD ops on blog posts
 2. CRUD ops on blog comments
 3. Clap blog post

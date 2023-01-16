@@ -6,7 +6,7 @@ const (
 	LOGGER_SERVICE       = "logger-service"
 	NOTIFICATION_SERVICE = "notification-service"
 	GATEWAY_SERVICE      = "gateway-service"
-	BLOG_SERVICE         = "blog-service"
+	POST_SERVICE         = "post-service"
 	LOG_SERVICE_URL      = "http://localhost:3002"
 	// RABBITMQ_SERVER_URL  = "amqp://username:password@rabbitmq:5672/"
 	MAIL               = "mail"

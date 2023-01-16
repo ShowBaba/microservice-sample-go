@@ -10,15 +10,7 @@ import (
 	"github.com/showbaba/microservice-sample-go/shared"
 )
 
-type Post struct {
-	ID        int         `json:"id"`
-	Title     string      `json:"title"`
-	Body      string      `json:"body"`
-	UserID    int64       `json:"userId"`
-	User      shared.User `json:"user"`
-	CreatedAt time.Time   `json:"created_at"`
-	UpdatedAt time.Time   `json:"updated_at"`
-}
+type Post shared.Post
 
 type User shared.User
 
@@ -37,15 +29,15 @@ func (u *User) GetByEmail(email string) (*User, error) {
 	return &user, nil
 }
 
-func (u *Post) Insert(post *Post) (int, error) {
+func (p *Post) Insert() (int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 	var id int
-	query := `INSERT INTO Posts (title, body, userId, created_at, updated_at)
+	query := `INSERT INTO Posts (title, body, user_id, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5) RETURNING id`
 	if err := db.QueryRowContext(ctx, query,
-		&post.Title, &post.Body,
-		&post.UserID,
+		&p.Title, &p.Body,
+		&p.UserID,
 		time.Now(), time.Now()).Scan(&id); err != nil {
 		return 0, err
 	}
@@ -92,8 +84,8 @@ func Migrate() {
 		}
 		if !tableExist {
 			query := `CREATE TABLE POSTS(
-					ID SERIAL PRIMARY KEY, TITLE VARCHAR(500) NOT NULL,
-					BODY TEXT NOT NULL, USERID INT NOT NULL, CREATED_AT DATE, UPDATED_AT DATE
+					ID SERIAL PRIMARY KEY, TITLE VARCHAR(255) NOT NULL,
+					BODY TEXT NOT NULL, USER_ID INT NOT NULL, CREATED_AT DATE, UPDATED_AT DATE
 				)`
 			_, err := db.ExecContext(ctx, query)
 			if err != nil {

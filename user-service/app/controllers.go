@@ -74,7 +74,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		Lastname:  input.Lastname,
 		Password:  hash,
 	}
-	id, err := models.User.Insert(&user)
+	id, err := user.Insert()
 	if err != nil {
 		shared.Dispatch500Error(w, err)
 		if err := shared.LogRequest(ctx, messageChan, shared.USER_SERVICE, fmt.Sprintf("err: %v", err)); err != nil {
@@ -84,7 +84,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// TODO: send id to avater-generator function
-	// send email notification to user email
 	mail := shared.Mail{
 		Sender:  shared.MAIL_USERNAME,
 		Subject: "Welcome to our blog!",

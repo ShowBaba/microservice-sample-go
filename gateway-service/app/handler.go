@@ -157,10 +157,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		}
 		request.URL = fmt.Sprintf("%s:%v%s", config.Services.User.BaseURL, config.Services.User.Port, requestInfo.OriginalURL)
 		service = shared.USER_SERVICE
-	case "blog":
+	case "post":
 		switch requestInfo.Method {
 		case "GET":
-			if len(config.Services.Blog.Endpoints.Get) < 1 {
+			if len(config.Services.Post.Endpoints.Get) < 1 {
 				shared.Dispatch501Error(w, "request path is unavailable", nil)
 				if err := shared.LogRequest(ctx, messageChan, shared.GATEWAY_SERVICE, "err: request path is unavailable"); err != nil {
 					shared.Dispatch400Error(w, "invalid body: %s", err)
@@ -169,7 +169,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 				return
 			} else {
 				flag := false
-				for _, param := range config.Services.Blog.Endpoints.Get {
+				for _, param := range config.Services.Post.Endpoints.Get {
 					if param == requestParam {
 						flag = true
 					}
@@ -185,7 +185,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 				request.Method = "GET"
 			}
 		case "POST":
-			if len(config.Services.Blog.Endpoints.Post) < 1 {
+			if len(config.Services.Post.Endpoints.Post) < 1 {
 				shared.Dispatch501Error(w, "request path is unavailable", nil)
 				if err := shared.LogRequest(ctx, messageChan, shared.GATEWAY_SERVICE, "err: request path is unavailable"); err != nil {
 					shared.Dispatch400Error(w, "invalid body: %s", err)
@@ -194,7 +194,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 				return
 			} else {
 				flag := false
-				for _, param := range config.Services.Blog.Endpoints.Post {
+				for _, param := range config.Services.Post.Endpoints.Post {
 					if param == requestParam {
 						flag = true
 					}
@@ -217,8 +217,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			}
 			return
 		}
-		request.URL = fmt.Sprintf("%s:%v%s", config.Services.Blog.BaseURL, config.Services.Blog.Port, requestInfo.OriginalURL)
-		service = shared.BLOG_SERVICE
+		request.URL = fmt.Sprintf("%s:%v%s", config.Services.Post.BaseURL, config.Services.Post.Port, requestInfo.OriginalURL)
+		service = shared.POST_SERVICE
 	default:
 		shared.Dispatch400Error(w, "no service available to process request", nil)
 		if err := shared.LogRequest(ctx, messageChan, shared.GATEWAY_SERVICE, "err: no service available to process request"); err != nil {

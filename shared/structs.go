@@ -30,7 +30,7 @@ type AuthTokenJwtClaim struct {
 }
 
 type APIResponse struct {
-	Status  int      `json:"status"`
+	Status  int         `json:"status"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
 }
@@ -52,11 +52,21 @@ func (mail *Mail) BuildMessage() string {
 }
 
 type User struct {
+	ID        int    `json:"id"`
+	Email     string `json:"email"`
+	Firstname string `json:"firstname,omitempty"`
+	Lastname  string `json:"lastname,omitempty"`
+	Password  string `json:"-"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type Post struct {
 	ID        int       `json:"id"`
-	Email     string    `json:"email"`
-	Firstname string    `json:"firstname,omitempty"`
-	Lastname  string    `json:"lastname,omitempty"`
-	Password  string    `json:"-"`
+	Title     string    `json:"title"`
+	Body      string    `json:"body"`
+	UserID    int64     `json:"user_id"`
+	User      User      `json:"user"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
