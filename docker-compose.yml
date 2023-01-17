@@ -100,6 +100,22 @@ services:
       - 3002:3002
     environment:
       - RABBITMQ_SERVER_URL=amqp://username:password@rabbitmq:5672/
+  data-retriever-service:
+    build:
+      context: .
+      dockerfile: data-retriever-service/Dockerfile
+    networks:
+      - default
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - 3005:3005
+    environment:
+      - DB_HOST=host.docker.internal
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=blog-db
   logger-service:
     build:
       context: .
