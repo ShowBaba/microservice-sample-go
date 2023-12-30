@@ -98,11 +98,6 @@ func parseDbClause(params graphql.ResolveParams, tx *gorm.DB, nodeType *graphql.
 		case graphql.Boolean:
 			tx = tx.Where(key+" = ?", val.(bool))
 		case graphql.Int:
-			// handle >= or <= int value
-			if nodeType.Name() == "MintCalendarCollectionList" {
-				break
-			}
-
 			if intVal, ok := val.(int); ok {
 				tx = tx.Where(key+" = ?", intVal)
 			} else if strVal, ok := val.(string); ok {

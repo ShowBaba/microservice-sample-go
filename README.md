@@ -1,6 +1,6 @@
 ## BASIC MICROSERVICE PROJECT IN GO
 
-This project is a basic blog application backend, my attempt at implementing a microservice application with different communication protocols
+This project is a basic blog application backend, my attempt at implementing a microservice application with different communication design patterns
 
 ### Here's my proposed architecture 
 ![microservice-architecture image](microservice-architecture.png)
@@ -17,6 +17,7 @@ This project is a basic blog application backend, my attempt at implementing a m
 - [Notification (Pub-Sub)](#NOTIFICATION)
 - [Data Retriever (GraphQL)](#DATA_RETRIEVER)
 - [Post (REST)](#POST)
+- [Admin (RPC)](#Admin)
 
 
 ## AUTH
@@ -58,6 +59,9 @@ This project is a basic blog application backend, my attempt at implementing a m
 1. CRUD ops on blog posts
 2. CRUD ops on blog comments
 3. Clap blog post
+
+## Admin
+1. 
 
 # NOTE
 To run the gateway locally, update the base urls of the services in the [conf.yml](https://github.com/ShowBaba/microservice-sample-go/blob/main/gateway-service/conf.yaml) file e.g http://auth-service -> http://localhost

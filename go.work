@@ -1,0 +1,11 @@
+go 1.19
+
+use (
+	./auth-service
+	./data-retriever-service
+	./post-service
+	./user-service
+	logger-service
+	gateway-service
+	notification-service
+)

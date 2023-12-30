@@ -7,8 +7,6 @@ import (
 	"github.com/showbaba/microservice-sample-go/gateway-service/app"
 )
 
-
-
 func main() {
 	// setup rabbitmq
 	connection, err := amqp.Dial(app.GetConfig().RabbitmqServerURL)

@@ -14,9 +14,9 @@ var (
 )
 
 type Config struct {
-	Port     string
-	MongoURI string
-	RabbitmqServerURL       string
+	Port              string
+	MongoURI          string
+	RabbitmqServerURL string
 }
 
 func GetConfig() Config {
@@ -29,9 +29,9 @@ func GetConfig() Config {
 
 func defaultConfig() *Config {
 	return &Config{
-		Port:     os.Getenv("PORT"),
-		MongoURI: os.Getenv("MONGO_URI"),
-		RabbitmqServerURL:       os.Getenv("RABBITMQ_SERVER_URL"),
+		Port:              os.Getenv("PORT"),
+		MongoURI:          os.Getenv("MONGO_URI"),
+		RabbitmqServerURL: os.Getenv("RABBITMQ_SERVER_URL"),
 	}
 }
 

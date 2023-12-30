@@ -3,6 +3,7 @@ module github.com/showbaba/microservice-sample-go/data-retriever-service
 go 1.19
 
 require (
+	github.com/gorilla/mux v1.8.0
 	github.com/graphql-go/graphql v0.8.0
 	github.com/joho/godotenv v1.4.0
 	github.com/showbaba/microservice-sample-go/shared v0.0.0-00010101000000-000000000000
